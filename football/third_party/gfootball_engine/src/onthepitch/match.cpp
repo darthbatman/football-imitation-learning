@@ -771,7 +771,7 @@ void Match::GetTeamState(SharedInfo *state,
   teams[team_id]->GetAllPlayers(players);
   auto main_player = teams[team_id]->MainSelectedPlayer();
 
-  if (main_player != NULL) {
+  if (main_player != NULL && team_id == 0) {
     milliseconds ms = duration_cast<milliseconds>(
       system_clock::now().time_since_epoch()
     );
