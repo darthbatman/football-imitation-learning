@@ -18,7 +18,9 @@
 #include "match.hpp"
 
 #include <algorithm>
+#include <chrono>
 #include <cmath>
+#include <iostream>
 
 #include "../base/geometry/triangle.hpp"
 #include "../base/log.hpp"
@@ -33,6 +35,8 @@
 #include "file.h"
 #include "player/playerofficial.hpp"
 #include "proceduralpitch.hpp"
+
+using namespace std::chrono;
 
 constexpr unsigned int replaySize_ms = 10000;
 constexpr unsigned int camPosSize = 150;
@@ -766,6 +770,17 @@ void Match::GetTeamState(SharedInfo *state,
   std::vector<Player *> players;
   teams[team_id]->GetAllPlayers(players);
   auto main_player = teams[team_id]->MainSelectedPlayer();
+
+  if (main_player != NULL) {
+    milliseconds ms = duration_cast<milliseconds>(
+      system_clock::now().time_since_epoch()
+    );
+    std::cout << ms.count() << "," ;
+    std::cout << main_player->GetCurrentFunctionType() << ",";
+    std::cout << main_player->GetEnumVelocity() << ",";
+    std::cout << main_player->GetDirectionVec() << std::endl;
+  }
+
   for (auto player : players) {
     DO_VALIDATION;
     auto controller = player->ExternalController();

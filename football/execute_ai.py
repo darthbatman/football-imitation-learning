@@ -6,9 +6,9 @@ from gfootball.env import football_action_set
 from gfootball_engine import e_BackendAction
 
 
-def execute_ai(env_name):
+def execute_ai(scenario):
     # initialize environment
-    env = football_env.create_environment(env_name=env_name, representation='raw',
+    env = football_env.create_environment(env_name=scenario, representation='raw',
                                           stacked=False, logdir='logs',
                                           write_goal_dumps=False,
                                           write_full_episode_dumps=False, render=False)
@@ -20,7 +20,7 @@ def execute_ai(env_name):
     steps = 0
     while True:
         observation, reward, done, _ = env.step(action_builtin_ai)
-        episodes.append((time.time(), steps, observation, reward, done))
+        episodes.append((int(round(time.time() * 1000)), steps, observation, reward, done))
         steps += 1
         if steps % 100 == 0:
             print('Step %d Reward: %f' % (steps, reward))
@@ -29,7 +29,7 @@ def execute_ai(env_name):
         if done:
             env.reset()
     print('Steps: %d Reward: %.2f' % (steps, reward))
-    pickle.dump(episodes, open(f'episodes/episodes_{env_name}_{int(time.time())}.pkl', 'wb'))
+    pickle.dump(episodes, open(f'episodes/observations_{scenario}_{int(time.time())}.pkl', 'wb'))
 
 
 if __name__ == '__main__':
