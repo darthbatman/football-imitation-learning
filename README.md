@@ -8,9 +8,23 @@ First, navigate to the football directory with `cd football`.
 
 To install the required dependencies and build the environment, run `pip3 install .`.
 
-To execute the AI in the environment, run `python3 execute_ai.py >> episodes/actions_SCENARIO_ID.csv`. where `SCENARIO` is the scenario the AI is executing in and where `ID` is the identifier for this execution.
+To execute the AI in the environment and collect episode data, run `python3 execute_ai.py SCENARIO REPRESENTATION ACTION_DATA_FILE_NAME >> ACTION_DATA_FILE_NAME'`. where `SCENARIO` is the scenario the AI is executing in, `REPRESENTATION` is the observation type (`raw`, `pixels`, etc.), and where `ACTION_DATA_FILE_NAME` is the file to which action data will be written to by redirecting STDOUT.
 
-The observations and action data for this execution will be stored at `episodes/observations_SCENARIO_TS.csv` and `episodes/actions_SCENARIO_ID.csv`, respectively, where `TS` is the ending timestamp of the execution in seconds from epoch time.
+The episodes (states and corresponding actions) for this execution will be stored at `episodes/episodes_SCENARIO_TS.pkl`, respectively, where `TS` is the ending timestamp of the execution in seconds from epoch time. The file to which action data was written to, denoted by `ACTION_DATA_FILE_NAME`, can be deleted.
+
+The following is an example of how to execute the AI in the environment and collect episode data.
+
+```
+python3 execute_ai.py 11_vs_11_stochastic raw ad.csv >> ad.csv
+```
+
+The episodes for this execution will be stored at `episodes/episodes_11_vs_11_stochastic_TS.pkl`, where `TS` is the ending timestamp of the execution in seconds from epoch time.
+
+## Notes
+
+At the moment, the assumption is made that the agent will control the left team.
+
+If `pixels` or `pixels_gray` is selected as the observation type, the execution will be rendered and displayed.
 
 ## References
 

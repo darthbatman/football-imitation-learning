@@ -72,12 +72,15 @@ def _map_action_data_to_action_space(action_data_file_name):
     return actions
 
 
-def execute_ai(scenario, actions_file_name):
+def execute_ai(scenario, representation, actions_file_name):
     # initialize environment
-    env = football_env.create_environment(env_name=scenario, representation='raw',
+    should_render = False
+    if representation in ['pixels', 'pixels_gray']:
+        should_render = True
+    env = football_env.create_environment(env_name=scenario, representation=representation,
                                           stacked=False, logdir='logs',
                                           write_goal_dumps=False,
-                                          write_full_episode_dumps=False, render=False)
+                                          write_full_episode_dumps=False, render=should_render)
     env.reset()
     # create ai action
     action_builtin_ai = football_action_set.CoreAction(e_BackendAction.builtin_ai, "builtin_ai")
@@ -97,16 +100,18 @@ def execute_ai(scenario, actions_file_name):
     for state in states:
         ts, _, _, _, _ = state
         if ts not in actions:
-            continue
+            ts = sorted([t for t in list(actions.keys()) if t < ts])[-1]
         action = actions[ts]
         episodes.append([action] + state)
+        del actions[ts]
     pickle.dump(episodes, open(f'episodes/episodes_{scenario}_{int(time.time())}.pkl', 'wb'))
 
 
 if __name__ == '__main__':
-    if len(sys.argv) == 3:
+    if len(sys.argv) == 4:
         scenario = sys.argv[1]
-        actions_file_name = sys.argv[2]
-        execute_ai(scenario, actions_file_name)
+        representation = sys.argv[2]
+        actions_file_name = sys.argv[3]
+        execute_ai(scenario, representation, actions_file_name)
     else:
-        print('Usage: python3 execute_ai.py SCENARIO ACTION_DATA_FILE_NAME >> ACTION_DATA_FILE_NAME')
+        print('Usage: python3 execute_ai.py SCENARIO REPRESENTATION ACTION_DATA_FILE_NAME >> ACTION_DATA_FILE_NAME')
