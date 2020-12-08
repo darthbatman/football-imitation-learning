@@ -8,7 +8,12 @@ Application of imitation learning to football (soccer) video game.
 
 First, navigate to the football directory with `cd football`.
 
-To install the required dependencies and build the environment, run `pip3 install .`.
+To install the required dependencies and build the environment, run
+
+```
+pip3 install -r requirements.txt
+pip3 install .
+```
 
 ### Episode Data Collection
 
